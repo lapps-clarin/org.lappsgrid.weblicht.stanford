@@ -1,0 +1,7 @@
+target
+VERSION
+src/**/Version.java
+*.iml
+*.ipr
+*.iws
+*.log

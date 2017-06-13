@@ -1,0 +1,20 @@
+String xml = '''<?xml version="1.0" encoding="UTF-8"?>
+<D-Spin xmlns="http://www.dspin.de/data" version="0.4">
+    <MetaData xmlns="http://www.dspin.de/data/metadata"></MetaData>
+    <TextCorpus xmlns="http://www.dspin.de/data/textcorpus" lang="en">
+        <tc:text xmlns:tc="http://www.dspin.de/data/textcorpus">Karen flew to New York.</tc:text>
+    </TextCorpus>
+</D-Spin>'''
+
+String url = "http://vassar.lappsgrid.org/invoker/anc:weblicht.stanford.tokenizer_1.0.0"
+//String url = "http://grid.anc.org:9080/WeblichtStanfordServices/1.0.0-SNAPSHOT/services/TokenizerWrapper"
+
+def tokenizer = new ServiceClient(url, "tester", "tester")
+println tokenizer.getMetadata()
+def data = new Data()
+data.discriminator = "http://vocab.lappsgrid.org/ns/media/xml#tcf"
+data.payload = xml
+println data.asPrettyJson()
+println tokenizer.execute(data.asJson())
+
+

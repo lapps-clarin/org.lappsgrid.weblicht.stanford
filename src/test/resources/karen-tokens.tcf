@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<D-Spin xmlns="http://www.dspin.de/data" version="0.4">
+  <MetaData xmlns="http://www.dspin.de/data/metadata"></MetaData>
+  <TextCorpus xmlns="http://www.dspin.de/data/textcorpus" lang="en">
+    <tc:text xmlns:tc="http://www.dspin.de/data/textcorpus">Karen flew to New York.</tc:text>
+    <tc:tokens xmlns:tc="http://www.dspin.de/data/textcorpus">
+      <tc:token ID="t_0">Karen</tc:token>
+      <tc:token ID="t_1">flew</tc:token>
+      <tc:token ID="t_2">to</tc:token>
+      <tc:token ID="t_3">New</tc:token>
+      <tc:token ID="t_4">York</tc:token>
+      <tc:token ID="t_5">.</tc:token>
+    </tc:tokens>
+    <tc:sentences xmlns:tc="http://www.dspin.de/data/textcorpus">
+      <tc:sentence tokenIDs="t_0 t_1 t_2 t_3 t_4 t_5"></tc:sentence>
+    </tc:sentences>
+  </TextCorpus>
+</D-Spin>
