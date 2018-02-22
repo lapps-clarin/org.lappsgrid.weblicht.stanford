@@ -2,6 +2,7 @@ package org.lappsgrid.weblicht.stanford;
 
 import static org.lappsgrid.discriminator.Discriminators.*;
 import org.lappsgrid.metadata.ServiceMetadataBuilder;
+import org.lappsgrid.weblicht.AbstractWrapper;
 
 /**
  * @author Keith Suderman
@@ -16,8 +17,6 @@ public class TokenizerWrapper extends AbstractWrapper
 	@Override
 	public ServiceMetadataBuilder configure(ServiceMetadataBuilder builder)
 	{
-//		String[] types = { Uri.TOKEN, Uri.SENTENCE };
-		System.out.println("Tokenizer: configuring builder");
 		builder.name("Weblicht Stanford Tokenizer")
 				.produces(Uri.TOKEN, Uri.SENTENCE)
 				.description("LAPPS Grid wrapper around the Weblicht Stanford Tokenizer.");

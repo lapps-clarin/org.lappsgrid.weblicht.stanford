@@ -13,5 +13,6 @@ Currently four Stanford NLP services are wrapped:
 1. Part of speech tagger
 1. Named entity recognizer
 1. Dependency Parser
+1. Morphological Analyzer
 
 

@@ -1,6 +1,8 @@
 package org.lappsgrid.weblicht.stanford;
 
 import org.lappsgrid.metadata.ServiceMetadataBuilder;
+import org.lappsgrid.weblicht.AbstractWrapper;
+
 import static org.lappsgrid.discriminator.Discriminators.*;
 
 /**
