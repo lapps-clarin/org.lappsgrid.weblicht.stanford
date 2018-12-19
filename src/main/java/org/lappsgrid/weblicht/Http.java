@@ -1,14 +1,6 @@
-package org.lappsgrid.weblicht.stanford;
-
-import groovyx.net.http.FromServer;
-import groovyx.net.http.HttpBuilder;
-import groovyx.net.http.HttpConfig;
-import groovyx.net.http.NativeHandlers;
-import org.lappsgrid.discriminator.Discriminators;
-import org.lappsgrid.serialization.Data;
+package org.lappsgrid.weblicht;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +8,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Keith Suderman
@@ -25,45 +19,59 @@ import java.net.URL;
 public class Http
 {
 	public static final String TCF = "text/tcf+xml";
+	public static final String JSON_MIME_TYPE = "application/json";
 
 	public static Response post(String uri, String body) throws IOException
 	{
+		return post(uri, TCF, body);
+	}
+
+	public static Response post(String uri, String type, String body) throws IOException
+	{
+//		System.out.println("Posting " + type);
+//		return httpPost(uri, type, body);
+//	}
+//
+//	public static Response okPost(String uri, String type, String body) throws IOException
+//	{
+//		OkHttp.Reply reply = OkHttp.post(uri, type, body);
+//		return new Response(reply.getCode(), reply.getBody());
+//	}
+//
+//	public static Response httpPost(String uri, String type, String body) throws IOException
+//	{
 		URL url = new URL(uri);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Accept", TCF);
-		connection.setRequestProperty("Content-type", TCF);
+		connection.setRequestProperty("Content-type", type);
 		connection.setDoOutput(true);
-		OutputStream ostream = connection.getOutputStream();
 		PrintStream out = new PrintStream(connection.getOutputStream());
+		System.out.println(body.getClass().getName());
 		out.print(body);
+		out.flush();
 		out.close();
 
-		BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
 		int status = connection.getResponseCode();
 		String message;
-		if (status >= 200 && status < 300)
+		if (status < 300)
 		{
 			message = read(connection.getInputStream());
 		}
-		else if (status >= 400)
-		{
-			message = read(connection.getErrorStream());
-		}
 		else
 		{
-			message = String.format("Unexcected status code: " + status);
-			status = 500;
-
+			message = "ERROR: " + connection.getResponseMessage() + "\n" + read(connection.getErrorStream());
 		}
 		return new Response(status, message);
 	}
 
 	protected static String read(InputStream in) throws IOException
 	{
+		System.out.println("available: " + in.available());
 		StringBuilder buffer = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		String line;
+
 		while ((line = reader.readLine()) != null)
 		{
 			buffer.append(line);
@@ -71,7 +79,7 @@ public class Http
 		return buffer.toString();
 	}
 
-	static class Response {
+	public static class Response {
 		private int status;
 		private String message;
 

@@ -1,21 +1,18 @@
-package org.lappsgrid.weblicht.stanford;
+package org.lappsgrid.weblicht;
 
-import groovyx.net.http.FromServer;
-import groovyx.net.http.HttpBuilder;
-import groovyx.net.http.HttpConfig;
-import groovyx.net.http.NativeHandlers;
 import org.lappsgrid.api.WebService;
 import org.lappsgrid.metadata.ServiceMetadata;
 import org.lappsgrid.metadata.ServiceMetadataBuilder;
 import org.lappsgrid.serialization.Data;
 import org.lappsgrid.serialization.Serializer;
+import org.lappsgrid.weblicht.Http;
+import org.lappsgrid.weblicht.Version;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.util.stream.Collectors;
 
 import static org.lappsgrid.discriminator.Discriminators.*;
 
@@ -26,8 +23,9 @@ public abstract class AbstractWrapper implements WebService
 {
 	public static final String TCF = "text/tcf+xml";
 
-	private String metadata;
-	private String url;
+	protected String metadata;
+	protected String url;
+	protected String format;
 
 	private AbstractWrapper()
 	{
@@ -36,12 +34,27 @@ public abstract class AbstractWrapper implements WebService
 
 	protected AbstractWrapper(String url)
 	{
-		this.url = url;
+		this(url, Uri.TCF);
 	}
 
+	protected AbstractWrapper(String url, String format)
+	{
+		this.url = url;
+		this.format = format;
+	}
 //	public abstract String getUrl();
 
 	public abstract ServiceMetadataBuilder configure(ServiceMetadataBuilder builder);
+
+	/**
+	 * The content-type this service will POST to the Weblicht service.
+	 *
+	 * @return
+	 */
+	public String contentType()
+	{
+		return TCF;
+	}
 
 	@Override
 	public String execute(String input)
@@ -51,18 +64,18 @@ public abstract class AbstractWrapper implements WebService
 		if (Uri.ERROR.equals(discriminator)) {
 			return input;
 		}
-		if (!Uri.TCF.equals(discriminator)) {
+		if (!this.format.equals(discriminator)) {
 			data.setDiscriminator(Uri.ERROR);
 			data.setPayload("Invalid discriminator type: " + discriminator);
 			return data.asPrettyJson();
 		}
 
-//		Http http = new Http();
-//		return http.post(url, data.getPayload().toString());
-
 		try
 		{
-			Http.Response response = Http.post(url, data.getPayload().toString());
+//			String json = Serializer.toJson(data.getPayload());
+//			System.out.println("POSTing");
+//			System.out.println(json);
+			Http.Response response = Http.post(url, contentType(), data.getPayload().toString());
 			data.setPayload(response.getMessage());
 			if (response.getStatus() < 300) {
 				data.setDiscriminator(Uri.TCF);
@@ -145,7 +158,8 @@ public abstract class AbstractWrapper implements WebService
 	public String getMetadata()
 	{
 		if (metadata == null) {
-			String licenseText = "Stanford NLP is released under the `GNU General Public License <https://stanfordnlp.github.io/CoreNLP/#license>`_.";
+			//String licenseText = "Stanford NLP is released under the `GNU General Public License v3 (or later) <https://stanfordnlp.github.io/CoreNLP/#license>`_.";
+			String licenseText = Uri.GPL3;
 			ServiceMetadata md = configure(new ServiceMetadataBuilder())
 					.allow(Uri.ALL)
 					.vendor("http://weblicht.sfs.uni-tuebingen.de/")
@@ -155,10 +169,13 @@ public abstract class AbstractWrapper implements WebService
 					.produceFormat(Uri.TCF)
 					.produceLanguage("en")
 					.requireEncoding("UTF-8")
-					.requireFormat(Uri.TCF)
 					.requireLanguage("en")
+					.requireFormat(this.format)
 					.build();
-			metadata = Serializer.toPrettyJson(md);
+			Data data = new Data();
+			data.setDiscriminator(Uri.META);
+			data.setPayload(md);
+			metadata = data.asPrettyJson();
 		}
 		return metadata;
 	}

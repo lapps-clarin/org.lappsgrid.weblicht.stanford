@@ -1,21 +1,26 @@
 package org.lappsgrid.weblicht.stanford;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
+
 import org.lappsgrid.api.WebService;
 import org.lappsgrid.metadata.IOSpecification;
 import org.lappsgrid.metadata.ServiceMetadata;
+import org.lappsgrid.serialization.Data;
 import org.lappsgrid.serialization.Serializer;
+import org.lappsgrid.weblicht.Version;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.lappsgrid.discriminator.Discriminators.*;
 
 /**
  * @author Keith Suderman
  */
-public class MetadataTests
+public class MetadataTest
 {
-	public MetadataTests()
+	public MetadataTest()
 	{
 
 	}
@@ -25,7 +30,10 @@ public class MetadataTests
 	{
 		WebService service = new TokenizerWrapper();
 		String json = service.getMetadata();
-		ServiceMetadata md = Serializer.parse(json, ServiceMetadata.class);
+		Data<Map> data = Serializer.parse(json, Data.class);
+		assertEquals(Uri.META, data.getDiscriminator());
+
+		ServiceMetadata md = new ServiceMetadata(data.getPayload());
 		assert Uri.ALL.equals(md.getAllow());
 		assert "http://weblicht.sfs.uni-tuebingen.de/".equals(md.getVendor());
 		assert Version.getVersion().equals(md.getVersion());
@@ -57,7 +65,10 @@ public class MetadataTests
 	{
 		WebService service = new TaggerWrapper();
 		String json = service.getMetadata();
-		ServiceMetadata md = Serializer.parse(json, ServiceMetadata.class);
+		Data<Map> data = Serializer.parse(json, Data.class);
+		assertEquals(Uri.META, data.getDiscriminator());
+
+		ServiceMetadata md = new ServiceMetadata(data.getPayload());
 		assert Uri.ALL.equals(md.getAllow());
 		assert "http://weblicht.sfs.uni-tuebingen.de/".equals(md.getVendor());
 		assert Version.getVersion().equals(md.getVersion());
@@ -92,7 +103,10 @@ public class MetadataTests
 	{
 		WebService service = new ParserWrapper();
 		String json = service.getMetadata();
-		ServiceMetadata md = Serializer.parse(json, ServiceMetadata.class);
+		Data<Map> data = Serializer.parse(json, Data.class);
+		assertEquals(Uri.META, data.getDiscriminator());
+
+		ServiceMetadata md = new ServiceMetadata(data.getPayload());
 
 		IOSpecification requires = md.getRequires();
 		List<String> annotations = requires.getAnnotations();
@@ -112,7 +126,10 @@ public class MetadataTests
 	{
 		WebService service = new NameEntityRecognizerWrapper();
 		String json = service.getMetadata();
-		ServiceMetadata md = Serializer.parse(json, ServiceMetadata.class);
+		Data<Map> data = Serializer.parse(json, Data.class);
+		assertEquals(Uri.META, data.getDiscriminator());
+
+		ServiceMetadata md = new ServiceMetadata(data.getPayload());
 
 		IOSpecification requires = md.getRequires();
 		List<String> annotations = requires.getAnnotations();
