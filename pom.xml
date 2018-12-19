@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.lappsgrid.weblicht</groupId>
     <artifactId>service-wrapper</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>war</packaging>
     <build>
         <finalName>WeblichtStanfordServices#${project.version}</finalName>
