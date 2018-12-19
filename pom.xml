@@ -10,8 +10,28 @@
     </parent>
     <groupId>org.lappsgrid.weblicht</groupId>
     <artifactId>service-wrapper</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+    <url>https://github.com/lapps-clarin/org.lappsgrid.weblicht.stanford</url>
+    <licenses>
+        <license>
+            <name>The Apache License. Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/lapps-clarin/org.lappsgrid.weblicht.stanford</url>
+        <connection>scm:git:https://github.com/lapps-clarin/org.lappsgrid.weblicht.stanford.git</connection>
+        <developerConnection>scm:git:https://github.com/lapps-clarin/org.lappsgrid.weblicht.stanford.git</developerConnection>
+    </scm>
+    <issueManagement>
+        <url>https://github.com/lapps-clarin/org.lappsgrid.weblicht.stanford/issues</url>
+        <system>GitHub issues</system>
+    </issueManagement>
+    <ciManagement>
+        <url>https://travis-ci.org/lapps-clarin/org.lappsgrid.weblicht.stanford</url>
+        <system>travis</system>
+    </ciManagement>
     <build>
         <finalName>WeblichtStanfordServices#${project.version}</finalName>
         <plugins>
